@@ -1,7 +1,26 @@
 import { InfoOutlined, PlayArrow } from "@material-ui/icons"
 import "./featured.scss"
+import { useEffect,useState } from "react"
+import axios from "axios"
 
 function Featured({type}) {
+    const [content, setContent] = useState({})
+
+    useEffect(()=>{
+        const getRandomContent =async ()=>{
+            try{
+                const res = await axios.get(`/movies/random?type=${type}`,{
+                    headers: {
+                        token: "Barer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NDY4ZmFjNWY5NjlmYTMwMTQzNDI1ZSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY4MjQ4NTE3MCwiZXhwIjoxNjgyOTE3MTcwfQ.BmoHYmPlL-Pt9MS_8SR-IojuOLrVpSzUmXOGMIIHKRs"
+                      },
+                })
+                setContent(res.data[0])
+            }catch(err){
+                console.log(err)
+            }
+        }
+        getRandomContent()
+    },[type])
   return (
     <div className="featured">
         {type && (
@@ -25,11 +44,11 @@ function Featured({type}) {
                 </select>
             </div>
         )}
-        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80" alt="" />
+        <img src={content.img} alt="" />
         <div className="info">
-            <img src="https://occ-0-1432-1433.1.nflxso.net/dnm/api/v6/LmEnxtiAuzezXBjYXPuDgfZ4zZQ/AAAABUZdeG1DrMstq-YKHZ-dA-cx2uQN_YbCYx7RABDk0y7F8ZK6nzgCz4bp5qJVgMizPbVpIvXrd4xMBQAuNe0xmuW2WjoeGMDn1cFO.webp?r=df1" alt="" />
+            <img src={content.imgTitle} alt="" />
             <span className="desc">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius asperiores nisi voluptas quos laboriosam minus, incidunt provident excepturi earum, ab obcaecati ratione sint dolore reprehenderit suscipit soluta ad et, eos cum? Debitis et, harum explicabo sapiente quis aspernatur fugit dolores!
+                {content.desc}
             </span>
             <div className="buttons">
                 <button className="play">
