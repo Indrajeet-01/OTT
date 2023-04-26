@@ -37,7 +37,10 @@ export default function Home() {
             token: "Barer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NDY4ZmFjNWY5NjlmYTMwMTQzNDI1ZSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY4MjQ4NTE3MCwiZXhwIjoxNjgyOTE3MTcwfQ.BmoHYmPlL-Pt9MS_8SR-IojuOLrVpSzUmXOGMIIHKRs"
           },
         })
-        res.data.map((item) =>
+        const statsList  = res.data.sort(function (a,b) {
+          return a._id - b._id
+        })
+        statsList.map((item) =>
         setUserStats((prev) => [
           ...prev, {name:MONTHS[item._id - 1], "New User":item.total},
           ])
@@ -48,12 +51,12 @@ export default function Home() {
     }
     getStats()
   },[MONTHS])
-  console.log(userStats)
+
 
   return (
     <div className='home'>
         <FeaturedInfo/>
-        <Chart data={userData} title="Users Analytics" datakey="uv" grid />
+        <Chart data={userStats} title="Users Analytics" datakey="New User" grid />
         <div className='homeWidgets'>
           <WidgetSm/>
           <WidgetLg/>
