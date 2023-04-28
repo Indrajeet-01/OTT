@@ -1,5 +1,7 @@
 import { useState,useRef } from "react"
 import "./register.scss"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 export default function Register() {
   const [email,setEmail] = useState("")
@@ -8,11 +10,23 @@ export default function Register() {
   const [password,setPassword] = useState("")
   const passwordRef = useRef()
 
+  const [username,setUsername] = useState("")
+  const usernameRef = useRef()
+
+  const navigate = useNavigate()
+
   const handleStart = ()=>{
     setEmail(emailRef.current.value)
   }
-  const handleFinish = ()=>{
+  const handleFinish = async (e)=>{
+    e.preventDefault()
     setPassword(passwordRef.current.value)
+    setUsername(usernameRef.current.value)
+    try{
+      await axios.post("auth/register", {email,username,password})
+      navigate("/login")
+    }catch(err){}
+    
   }
 
   return (
@@ -40,6 +54,7 @@ export default function Register() {
      </div>
         ) : (
           <form className="input">
+        <input type='text' placeholder='username' ref={usernameRef}/>
          <input type='password' placeholder='password' ref={passwordRef}/>
          <button className='registerButton' onClick={handleFinish}> Start</button>
      </form>
